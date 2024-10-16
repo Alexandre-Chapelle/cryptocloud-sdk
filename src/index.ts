@@ -35,13 +35,12 @@ class CryptoCloud implements ICryptoCloud {
 
   public async createInvoice({
     query,
-    shop_id,
     amount,
     currency,
     add_fields,
     order_id,
     email,
-  }: ICreateInvoice): Promise<
+  }: Omit<ICreateInvoice, "shop_id">): Promise<
     ResponseData<CreateInvoiceSuccess, CreateInvoiceError>
   > {
     const sendRequestData: RequestParams<ICreateInvoice> = {
@@ -49,7 +48,7 @@ class CryptoCloud implements ICryptoCloud {
       endpoint: "invoice/create",
       body: {
         query,
-        shop_id,
+        shop_id: this.shopId,
         amount,
         currency,
         add_fields,

@@ -106,13 +106,12 @@ export interface ICancelInvoice {
 export interface ICryptoCloud {
   createInvoice({
     query,
-    shop_id,
     amount,
     currency,
     add_fields,
     order_id,
     email,
-  }: ICreateInvoice): Promise<
+  }: Omit<ICreateInvoice, "shop_id">): Promise<
     ResponseData<CreateInvoiceSuccess, CreateInvoiceError>
   >;
   cancelInvoice({
