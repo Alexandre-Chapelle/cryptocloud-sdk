@@ -99,6 +99,10 @@ export interface ICreateInvoice {
   email?: string;
 }
 
+export interface ICancelInvoice {
+  uuid: string;
+}
+
 export interface ICryptoCloud {
   createInvoice({
     query,
@@ -109,6 +113,11 @@ export interface ICryptoCloud {
     order_id,
     email,
   }: ICreateInvoice): Promise<
+    ResponseData<CreateInvoiceSuccess, CreateInvoiceError>
+  >;
+  cancelInvoice({
+    uuid,
+  }: ICancelInvoice): Promise<
     ResponseData<CreateInvoiceSuccess, CreateInvoiceError>
   >;
 }

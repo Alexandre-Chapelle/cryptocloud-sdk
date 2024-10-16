@@ -7,6 +7,7 @@ import {
   HttpMethodConfig,
   HttpMethodEnum,
   HttpMethods,
+  ICancelInvoice,
   ICreateInvoice,
   ICryptoCloud,
   KNOWN_HTTP_STATUS_ERRORS,
@@ -59,6 +60,28 @@ class CryptoCloud implements ICryptoCloud {
 
     return await this.sendRequest<
       ICreateInvoice,
+      CreateInvoiceSuccess,
+      CreateInvoiceError
+    >({
+      ...sendRequestData,
+    });
+  }
+
+  public async cancelInvoice({
+    uuid,
+  }: ICancelInvoice): Promise<
+    ResponseData<CreateInvoiceSuccess, CreateInvoiceError>
+  > {
+    const sendRequestData: RequestParams<ICancelInvoice> = {
+      method: HttpMethodEnum.POST,
+      endpoint: "invoice/merchant/canceled",
+      body: {
+        uuid,
+      },
+    };
+
+    return await this.sendRequest<
+      ICancelInvoice,
       CreateInvoiceSuccess,
       CreateInvoiceError
     >({
