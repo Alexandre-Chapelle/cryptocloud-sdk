@@ -1,5 +1,7 @@
 import {
   BodyAllowedMethods,
+  CancelInvoiceError,
+  CancelInvoiceSuccess,
   CreateInvoiceError,
   CreateInvoiceSuccess,
   Endpoints,
@@ -10,6 +12,9 @@ import {
   ICancelInvoice,
   ICreateInvoice,
   ICryptoCloud,
+  IInvoiceList,
+  InvoiceListError,
+  InvoiceListSuccess,
   KNOWN_HTTP_STATUS_ERRORS,
   RequestParams,
   RequestParamsBodyAllowed,
@@ -69,7 +74,7 @@ class CryptoCloud implements ICryptoCloud {
   public async cancelInvoice({
     uuid,
   }: ICancelInvoice): Promise<
-    ResponseData<CreateInvoiceSuccess, CreateInvoiceError>
+    ResponseData<CancelInvoiceSuccess, CancelInvoiceError>
   > {
     const sendRequestData: RequestParams<ICancelInvoice> = {
       method: HttpMethodEnum.POST,
@@ -81,8 +86,36 @@ class CryptoCloud implements ICryptoCloud {
 
     return await this.sendRequest<
       ICancelInvoice,
-      CreateInvoiceSuccess,
-      CreateInvoiceError
+      CancelInvoiceSuccess,
+      CancelInvoiceError
+    >({
+      ...sendRequestData,
+    });
+  }
+
+  public async invoiceList({
+    start,
+    end,
+    offset,
+    limit,
+  }: IInvoiceList): Promise<
+    ResponseData<InvoiceListSuccess, InvoiceListError>
+  > {
+    const sendRequestData: RequestParams<IInvoiceList> = {
+      method: HttpMethodEnum.POST,
+      endpoint: "invoice/merchant/canceled",
+      body: {
+        start,
+        end,
+        offset,
+        limit,
+      },
+    };
+
+    return await this.sendRequest<
+      IInvoiceList,
+      InvoiceListSuccess,
+      InvoiceListError
     >({
       ...sendRequestData,
     });

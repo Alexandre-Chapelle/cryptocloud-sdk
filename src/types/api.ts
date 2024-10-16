@@ -1,5 +1,14 @@
-import { CreateInvoiceError } from "./errors";
-import { CreateInvoiceSuccess, ResponseData } from "./responses";
+import {
+  CancelInvoiceError,
+  CreateInvoiceError,
+  InvoiceListError,
+} from "./errors";
+import {
+  CancelInvoiceSuccess,
+  CreateInvoiceSuccess,
+  InvoiceListSuccess,
+  ResponseData,
+} from "./responses";
 import { Optional } from "./util";
 
 type CurrencyCodes =
@@ -103,6 +112,13 @@ export interface ICancelInvoice {
   uuid: string;
 }
 
+export interface IInvoiceList {
+  start: string;
+  end: string;
+  offset?: number;
+  limit?: number;
+}
+
 export interface ICryptoCloud {
   createInvoice({
     query,
@@ -117,8 +133,14 @@ export interface ICryptoCloud {
   cancelInvoice({
     uuid,
   }: ICancelInvoice): Promise<
-    ResponseData<CreateInvoiceSuccess, CreateInvoiceError>
+    ResponseData<CancelInvoiceSuccess, CancelInvoiceError>
   >;
+  invoiceList({
+    start,
+    end,
+    offset,
+    limit,
+  }: IInvoiceList): Promise<ResponseData<InvoiceListSuccess, InvoiceListError>>;
 }
 
 export type RequestParamsBodyAllowed<T> = Optional<RequestParams<T>, "body">;
