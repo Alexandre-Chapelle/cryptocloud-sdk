@@ -1,0 +1,42 @@
+{
+  "name": "cryptocloud-typescript-sdk",
+  "version": "1.0.0",
+  "description": "Full unofficial cryptocloud.plus API SDK with typescript support",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build",
+    "test": "jest"
+  },
+  "homepage": "https://github.com/Alexandre-Chapelle/cryptocloud-typescript-sdk#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alexandre-Chapelle/cryptocloud-typescript-sdk.git"
+  },
+  "keywords": [
+    "sdk",
+    "api",
+    "crypto",
+    "library",
+    "typescript",
+    "cryptocloud",
+    "cryptocloud.plus"
+  ],
+  "author": {
+    "name": "Alexandre Chapelle"
+  },
+  "license": "MIT",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.7.5",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
+  }
+}
