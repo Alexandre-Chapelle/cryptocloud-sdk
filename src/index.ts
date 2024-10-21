@@ -1,4 +1,6 @@
 import {
+  BalanceError,
+  BalanceSuccess,
   BodyAllowedMethods,
   CancelInvoiceError,
   CancelInvoiceSuccess,
@@ -12,14 +14,23 @@ import {
   ICancelInvoice,
   ICreateInvoice,
   ICryptoCloud,
+  IInvoiceInformation,
   IInvoiceList,
+  InvoiceInformationError,
+  InvoiceInformationSuccess,
   InvoiceListError,
   InvoiceListSuccess,
+  IStaticWallet,
+  IStatistics,
   KNOWN_HTTP_STATUS_ERRORS,
   RequestParams,
   RequestParamsBodyAllowed,
   RequestParamsBodyDisallowed,
   ResponseData,
+  StaticWalletError,
+  StaticWalletSuccess,
+  StatisticsError,
+  StatisticsSuccess,
   SuccessResponse,
 } from "./types";
 
@@ -103,7 +114,7 @@ class CryptoCloud implements ICryptoCloud {
   > {
     const sendRequestData: RequestParams<IInvoiceList> = {
       method: HttpMethodEnum.POST,
-      endpoint: "invoice/merchant/canceled",
+      endpoint: "invoice/merchant/info",
       body: {
         start,
         end,
@@ -121,6 +132,87 @@ class CryptoCloud implements ICryptoCloud {
     });
   }
 
+  public async invoiceInformation({
+    uuids,
+  }: IInvoiceInformation): Promise<
+    ResponseData<InvoiceInformationSuccess, InvoiceInformationError>
+  > {
+    const sendRequestData: RequestParams<IInvoiceInformation> = {
+      method: HttpMethodEnum.POST,
+      endpoint: "invoice/merchant/info",
+      body: {
+        uuids,
+      },
+    };
+
+    return await this.sendRequest<
+      IInvoiceInformation,
+      InvoiceInformationSuccess,
+      InvoiceInformationError
+    >({
+      ...sendRequestData,
+    });
+  }
+
+  public async balance(): Promise<ResponseData<BalanceSuccess, BalanceError>> {
+    const sendRequestData: RequestParamsBodyDisallowed = {
+      method: HttpMethodEnum.GET,
+      endpoint: "merchant/wallet/balance/all",
+    };
+
+    return await this.sendRequest<undefined, BalanceSuccess, BalanceError>({
+      ...sendRequestData,
+    });
+  }
+
+  public async statistics({
+    start,
+    end,
+  }: IStatistics): Promise<ResponseData<StatisticsSuccess, StatisticsError>> {
+    const sendRequestData: RequestParams<IStatistics> = {
+      method: HttpMethodEnum.POST,
+      endpoint: "invoice/merchant/statistics",
+      body: {
+        start,
+        end,
+      },
+    };
+
+    return await this.sendRequest<
+      IStatistics,
+      StatisticsSuccess,
+      StatisticsError
+    >({
+      ...sendRequestData,
+    });
+  }
+
+  public async staticWallet({
+    shop_id,
+    currency,
+    identify,
+  }: IStaticWallet): Promise<
+    ResponseData<StaticWalletSuccess, StaticWalletError>
+  > {
+    const sendRequestData: RequestParams<IStaticWallet> = {
+      method: HttpMethodEnum.POST,
+      endpoint: "invoice/static/create",
+      body: {
+        shop_id,
+        currency,
+        identify,
+      },
+    };
+
+    return await this.sendRequest<
+      IStaticWallet,
+      StaticWalletSuccess,
+      StaticWalletError
+    >({
+      ...sendRequestData,
+    });
+  }
+
   private async sendRequest<T, R, E>({
     method,
     endpoint,
@@ -133,12 +225,12 @@ class CryptoCloud implements ICryptoCloud {
     optionalHeaders,
     body,
   }: RequestParamsBodyAllowed<T>): Promise<ResponseData<R, E>>;
-  private async sendRequest<T, R, E>({
+  private async sendRequest<R, E>({
     method,
     endpoint,
     optionalHeaders,
     body,
-  }: RequestParamsBodyDisallowed<T>): Promise<ResponseData<R, E>> {
+  }: RequestParamsBodyDisallowed): Promise<ResponseData<R, E>> {
     if (HttpMethodConfig[method] === false && body !== undefined) {
       throw new Error(`HTTP method ${method} does not support a request body.`);
     }

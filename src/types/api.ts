@@ -1,11 +1,15 @@
 import {
+  BalanceError,
   CancelInvoiceError,
   CreateInvoiceError,
+  InvoiceInformationError,
   InvoiceListError,
 } from "./errors";
 import {
+  BalanceSuccess,
   CancelInvoiceSuccess,
   CreateInvoiceSuccess,
+  InvoiceInformationSuccess,
   InvoiceListSuccess,
   ResponseData,
 } from "./responses";
@@ -119,6 +123,21 @@ export interface IInvoiceList {
   limit?: number;
 }
 
+export interface IInvoiceInformation {
+  uuids: string[];
+}
+
+export interface IStatistics {
+  start: string;
+  end: string;
+}
+
+export interface IStaticWallet {
+  shop_id: string;
+  currency: string;
+  identify: string;
+}
+
 export interface ICryptoCloud {
   createInvoice({
     query,
@@ -141,13 +160,22 @@ export interface ICryptoCloud {
     offset,
     limit,
   }: IInvoiceList): Promise<ResponseData<InvoiceListSuccess, InvoiceListError>>;
+  invoiceInformation({
+    uuids,
+  }: IInvoiceInformation): Promise<
+    ResponseData<InvoiceInformationSuccess, InvoiceInformationError>
+  >;
+  balance(): Promise<ResponseData<BalanceSuccess, BalanceError>>;
 }
 
 export type RequestParamsBodyAllowed<T> = Optional<RequestParams<T>, "body">;
-export type RequestParamsBodyDisallowed<T> = Exclude<RequestParams<T>, "body">;
+export type RequestParamsBodyDisallowed = Exclude<
+  RequestParams<undefined>,
+  "body"
+>;
 export interface RequestParams<T> {
   method: HttpMethods;
   endpoint: Endpoints;
   optionalHeaders?: HeadersInit;
-  body: T;
+  body?: T;
 }
