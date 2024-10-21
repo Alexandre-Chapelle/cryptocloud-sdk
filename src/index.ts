@@ -20,8 +20,8 @@ import {
   InvoiceInformationSuccess,
   InvoiceListError,
   InvoiceListSuccess,
-  IStaticWallet,
-  IStatistics,
+  IStaticWalletProps,
+  IStatisticsProps,
   KNOWN_HTTP_STATUS_ERRORS,
   RequestParams,
   RequestParamsBodyAllowed,
@@ -156,7 +156,7 @@ export class CryptoCloud implements ICryptoCloud {
 
   public async balance(): Promise<ResponseData<BalanceSuccess, BalanceError>> {
     const sendRequestData: RequestParamsBodyDisallowed = {
-      method: HttpMethodEnum.GET,
+      method: HttpMethodEnum.POST,
       endpoint: "merchant/wallet/balance/all",
     };
 
@@ -168,8 +168,10 @@ export class CryptoCloud implements ICryptoCloud {
   public async statistics({
     start,
     end,
-  }: IStatistics): Promise<ResponseData<StatisticsSuccess, StatisticsError>> {
-    const sendRequestData: RequestParams<IStatistics> = {
+  }: IStatisticsProps): Promise<
+    ResponseData<StatisticsSuccess, StatisticsError>
+  > {
+    const sendRequestData: RequestParams<IStatisticsProps> = {
       method: HttpMethodEnum.POST,
       endpoint: "invoice/merchant/statistics",
       body: {
@@ -179,7 +181,7 @@ export class CryptoCloud implements ICryptoCloud {
     };
 
     return await this.sendRequest<
-      IStatistics,
+      IStatisticsProps,
       StatisticsSuccess,
       StatisticsError
     >({
@@ -191,10 +193,10 @@ export class CryptoCloud implements ICryptoCloud {
     shop_id,
     currency,
     identify,
-  }: IStaticWallet): Promise<
+  }: IStaticWalletProps): Promise<
     ResponseData<StaticWalletSuccess, StaticWalletError>
   > {
-    const sendRequestData: RequestParams<IStaticWallet> = {
+    const sendRequestData: RequestParams<IStaticWalletProps> = {
       method: HttpMethodEnum.POST,
       endpoint: "invoice/static/create",
       body: {
@@ -205,7 +207,7 @@ export class CryptoCloud implements ICryptoCloud {
     };
 
     return await this.sendRequest<
-      IStaticWallet,
+      IStaticWalletProps,
       StaticWalletSuccess,
       StaticWalletError
     >({
@@ -237,13 +239,13 @@ export class CryptoCloud implements ICryptoCloud {
 
     const url = this.getFullUrl(endpoint);
     const headers = this.getRequestHeaders(optionalHeaders);
-    const options = this.getRequestOptions(method, headers);
+    const options = this.getRequestOptions(method, headers, body);
 
     try {
       const response = await fetch(url, options);
 
       if (!response.ok) {
-        if (response.status in KNOWN_HTTP_STATUS_ERRORS) {
+        if (KNOWN_HTTP_STATUS_ERRORS.includes(response.status)) {
           const error: ErrorResponse<E> = await response.json();
           return error;
         }
@@ -269,7 +271,11 @@ export class CryptoCloud implements ICryptoCloud {
     };
 
     if (body !== undefined && this.isBodyAllowed(method)) {
-      options.body = body;
+      if (typeof body === "object" && body !== null) {
+        options.body = JSON.stringify({ ...body, shop_id: this.shopId });
+      } else {
+        options.body = body;
+      }
     }
 
     return options;
@@ -282,7 +288,7 @@ export class CryptoCloud implements ICryptoCloud {
   private getRequestHeaders(optionalHeaders?: HeadersInit): HeadersInit {
     const headers: HeadersInit = {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${this.apiKey}`,
+      Authorization: `Token ${this.apiKey}`,
       ...optionalHeaders,
     };
 

@@ -53,7 +53,7 @@ export enum HttpMethodEnum {
   TRACE = "TRACE",
 }
 
-export const KNOWN_HTTP_STATUS_ERRORS = [400, 403] as const;
+export const KNOWN_HTTP_STATUS_ERRORS = [400, 403];
 
 export const HttpMethodConfig = {
   [HttpMethodEnum.GET]: false,
@@ -127,12 +127,12 @@ export interface IInvoiceInformation {
   uuids: string[];
 }
 
-export interface IStatistics {
+export interface IStatisticsProps {
   start: string;
   end: string;
 }
 
-export interface IStaticWallet {
+export interface IStaticWalletProps {
   shop_id: string;
   currency: string;
   identify: string;
