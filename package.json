@@ -1,6 +1,6 @@
 {
   "name": "cryptocloud-sdk",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Full unofficial cryptocloud.plus API SDK with typescript support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
