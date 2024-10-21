@@ -34,7 +34,7 @@ import {
   SuccessResponse,
 } from "./types";
 
-class CryptoCloud implements ICryptoCloud {
+export class CryptoCloud implements ICryptoCloud {
   private readonly baseUrl: string;
   private readonly apiKey: string;
   private readonly shopId: string;
