@@ -98,7 +98,7 @@ const staticWallet = await cryptoCloud.staticWallet({
 
 ## API Reference
 
-For detailed information on request and response structures, refer to the official [API documentation](docs.cryptocloud.plus).
+For detailed information on request and response structures, refer to the official [API documentation](https://docs.cryptocloud.plus/).
 
 ## Contributing
 
