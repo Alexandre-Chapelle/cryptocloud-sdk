@@ -1,8 +1,8 @@
-CryptoCloud SDK
-
 # CryptoCloud SDK
 
 A TypeScript SDK for interacting with the [CryptoCloud API](https://cryptocloud.plus/).
+
+[![npm version](https://img.shields.io/npm/v/cryptocloud-sdk.svg)](https://www.npmjs.com/package/cryptocloud-sdk) [![GitHub stars](https://img.shields.io/github/stars/Alexandre-Chapelle/cryptocloud-sdk.svg)](https://github.com/Alexandre-Chapelle/cryptocloud-sdk) [![license](https://img.shields.io/npm/l/cryptocloud-sdk.svg)](https://github.com/Alexandre-Chapelle/cryptocloud-sdk/blob/main/LICENSE)
 
 ## Installation
 
